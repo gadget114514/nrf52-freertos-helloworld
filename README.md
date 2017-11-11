@@ -25,5 +25,6 @@ make
 - App source (empty main function) can be compiled and linked
 - Binary not run yet
 
-- Should do
+
+## TODO
 - using UART 
