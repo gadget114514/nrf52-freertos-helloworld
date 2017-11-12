@@ -1,6 +1,7 @@
 ## nRF52832 app development boilerplate
 
-boilerplate repository for app development with cmake, freertos, gcc on nRF 52832.
+boilerplate repository for app development with cmake, freertos, gcc on nRF52832.
+
 
 
 ## Config for your SDK location
@@ -25,6 +26,13 @@ make
 - App source (empty main function) can be compiled and linked
 - Binary not run and verified yet
 
+Please inform me whether the app using this repository can run on nRF52832
+
+|App name|Required Function|Status|Board|Verified Date|
+|--------|-------|------|------|----|
+|HelloWorld|UART|Not yet|NA|NA|
+|Blinky|GPIO|Not yet|NA|NA|
+|BLE Adv|BLE|Not yet|NA|NA|
 
 ## TODO
 - using UART 
