@@ -1,22 +1,29 @@
 cmake_minimum_required (VERSION 2.8)
 
 list (APPEND CMAKE_MODULE_PATH
-      "${CMAKE_SOURCE_DIR}/cmake"
-      "${CMAKE_SOURCE_DIR}/cmake/modules"
-      "${CMAKE_SOURCE_DIR}/cmake/platforms")
+  "${CMAKE_SOURCE_DIR}/cmake"
+  "${CMAKE_SOURCE_DIR}/cmake/modules"
+  "${CMAKE_SOURCE_DIR}/cmake/platforms")
 
-    set(TARGET freertosnrf52)
-    set(NRFSDK here1)
-    set(BASELOC here2)    
-    
-    
-project ($(TARGET) C ASM)
 
-include (CheckIncludeFiles)
-include (CheckCSourceCompiles)
-include (collect)
-include (options)
-include (depends)
+set(SDK_ROOT /opt/local/src/nrf52/sdk/nRF5_SDK_12.3.0_d7731ad) # EDIT
+set(NRF_COMPONENTS_DIR ${SDK_ROOT}/components) # SETUP
+set(FREERTOS_DIR ${SDK_ROOT}/external/freertos) # SETUP
+set(NRF_COMPONENTS_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR}/cmake/nrf52lib/components) # DONT EDIT
+
+set(TARGET freertosnrf52)  # EDIT
+
+set(CMAKE_PROJECT_NAME ${TARGET}) # DONT EDIT
+set(PROJECT_DIR /opt/local/src/nrf52/nrf52-freertos-helloworld) # EDIT
+
+
+project ($(TARGET) C ASM) # DONT EDIT
+
+include (CheckIncludeFiles) # DONT EDIT
+include (CheckCSourceCompiles) # DONT EDIT
+include (collect) # DONT EDIT
+include (options) # DONT EDIT
+include (depends) # DONT EDIT
 
 foreach(_inc_path ${CMAKE_INCLUDE_PATH})
   collect (PROJECT_INC_DIRS "${_inc_path}")
@@ -25,84 +32,119 @@ endforeach()
 enable_testing ()
 
 
-
 # source file
 add_executable(nrf52
-
   # startup
-  lib/components/toolchain/gcc/gcc_startup_nrf52.S
+  ${NRF_COMPONENTS_DIR}/toolchain/gcc/gcc_startup_nrf52.S
 
   # nrf52 port
-  freertos/source/queue.c
-  freertos/source/tasks.c
-  freertos/source/croutine.c
-  freertos/source/timers.c
-  freertos/source/list.c
-  freertos/source/portable/MemMang/heap_1.c
-  freertos/source/event_groups.c
-  freertos/portable/GCC/nrf52/port.c
-  freertos/portable/CMSIS/nrf52/port_cmsis.c
-  freertos/portable/CMSIS/nrf52/port_cmsis_systick.c
+  ${FREERTOS_DIR}/source/queue.c
+  ${FREERTOS_DIR}/source/tasks.c
+  ${FREERTOS_DIR}/source/croutine.c
+  ${FREERTOS_DIR}/source/timers.c
+  ${FREERTOS_DIR}/source/list.c
+  ${FREERTOS_DIR}/source/portable/MemMang/heap_1.c
+  ${FREERTOS_DIR}/source/event_groups.c
+  ${FREERTOS_DIR}/portable/GCC/nrf52/port.c
+  ${FREERTOS_DIR}/portable/CMSIS/nrf52/port_cmsis.c
+  ${FREERTOS_DIR}/portable/CMSIS/nrf52/port_cmsis_systick.c
 
   # driver
-  lib/components/drivers_nrf/clock/nrf_drv_clock.c
-  lib/components/drivers_nrf/common/nrf_drv_common.c
+  ${NRF_COMPONENTS_DIR}/drivers_nrf/clock/nrf_drv_clock.c
+  ${NRF_COMPONENTS_DIR}/drivers_nrf/common/nrf_drv_common.c
   
   # platform
-  lib/components/libraries/util/app_error.c
-  lib/components/libraries/util/nrf_assert.c
-  lib/components/libraries/util/app_error_weak.c
-  lib/components/libraries/util/sdk_errors.c
-  lib/components/libraries/util/app_util_platform.c
-  lib/components/libraries/util/sdk_mapped_flags.c
+  ${NRF_COMPONENTS_DIR}/libraries/util/app_error.c
+  ${NRF_COMPONENTS_DIR}/libraries/util/nrf_assert.c
+  ${NRF_COMPONENTS_DIR}/libraries/util/app_error_weak.c
+  ${NRF_COMPONENTS_DIR}/libraries/util/sdk_errors.c
+  ${NRF_COMPONENTS_DIR}/libraries/util/app_util_platform.c
+  ${NRF_COMPONENTS_DIR}/libraries/util/sdk_mapped_flags.c
 
-  lib/components/toolchain/system_nrf52.c
+  ${NRF_COMPONENTS_DIR}/toolchain/system_nrf52.c
   
   # app
-  app/app.c
-  app/printf.c
-)
+  ${PROJECT_DIR}/app/app.c
+  ${PROJECT_DIR}/app/printf.c
+  )
 
 # device selection in nrf52.h
 
 # Set device
-    if(NOT DEVICE)
-      set(DEVICE nRF52832)
-      set(BOARD BOARD_PCA10036)
-      set(SOFTDEVICE S132)
-    endif()
+if(NOT DEVICE)
+  set(DEVICE NRF52832)
+  set(DEVICEFAMILY NRF52)      
+  set(BOARD BOARD_PCA10040)
+  set(SOFTDEVICE S132)
+  set(SOFTDEVICE_VERSION "3.0.0") # s132_nrf52_3.0.0_softdevice.hex
+  set(NRF_SD_BLE_API_VERSION 3)
+endif()
 
 
-    add_definitions(-DNRF52 -D_LITTLE_ENDIAN=1 -DNDEBUG -D__HEAP_SIZE=0)
+add_definitions(-D${DEVICEFAMILY} -D${DEVICE} -D_LITTLE_ENDIAN=1 -DNDEBUG -D__HEAP_SIZE=0 -DNRF_SD_BLE_API_VERSION=${NRF_SD_BLE_API_VERSION})
 
-    set(CMAKE_C_FLAGS "-ffreestanding -mcpu=cortex-m4 -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -ffunction-sections -fdata-sections -g -std=c99 -T ../lib/components/softdevice/s132/toolchain/armgcc/armgcc_s132_nrf52832_xxaa.ld -L ../lib/components/toolchain/gcc")
-    
+set(LDSCRIPT ${SDK_ROOT}/components/softdevice/s132/toolchain/armgcc/armgcc_s132_nrf52832_xxaa.ld) # EDIT
+set(LDSCRIPTDIR ${SDK_ROOT}/components/toolchain/gcc) # EDIT
+
+set(CMAKE_C_FLAGS "-ffreestanding -mcpu=cortex-m4 -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -ffunction-sections -fdata-sections -g -std=c99 -T ${LDSCRIPT} -L ${LDSCRIPTDIR}")
+
+
+# EDIT
+
 # include directories
 # freertos
-include_directories(freertos/source/include)
-#include_directories(freertos/config)
+include_directories(${FREERTOS_DIR}/source/include)
+#include_directories(${FREERTOS_DIR}/config)
 
 # nrf52
-include_directories(lib/components/libraries/util)
+include_directories(${NRF_COMPONENTS_DIR}/libraries/util)
+include_directories(${NRF_COMPONENTS_DIR}/libraries/timer)
+include_directories(${NRF_COMPONENTS_DIR}/libraries/scheduler)
 
-include_directories(lib/components/device)  # nrf.h
-include_directories(lib/components/softdevice/s132/headers)  # s132
-include_directories(freertos/portable/GCC/nrf52) # nrf52
-include_directories(freertos/portable/CMSIS/nrf52) # nrf52
-include_directories(lib/components/toolchain/cmsis/include)  # CM4
-include_directories(lib/components/toolchain) # system nrf52
+include_directories(${NRF_COMPONENTS_DIR}/device)  # nrf.h
+include_directories(${NRF_COMPONENTS_DIR}/softdevice/s132/headers)  # s132
+include_directories(${FREERTOS_DIR}/portable/GCC/nrf52) # nrf52
+include_directories(${FREERTOS_DIR}/portable/CMSIS/nrf52) # nrf52
+include_directories(${NRF_COMPONENTS_DIR}/toolchain/cmsis/include)  # CM4
+include_directories(${NRF_COMPONENTS_DIR}/toolchain) # system nrf52
 
 # peripheral
-include_directories(lib/components/drivers_nrf/hal) # nrf_rtc.h
-include_directories(lib/components/drivers_nrf/clock) # nrf_drv_clock.h
-include_directories(lib/components/drivers_nrf/common) # nrf_drv_clock.h
+include_directories(${NRF_COMPONENTS_DIR}/drivers_nrf/hal) # nrf_rtc.h
+include_directories(${NRF_COMPONENTS_DIR}/drivers_nrf/clock) # nrf_drv_clock.h
+include_directories(${NRF_COMPONENTS_DIR}/drivers_nrf/common) # nrf_drv_clock.h
+
+# log
+include_directories(${NRF_COMPONENTS_DIR}/libraries/log)
+include_directories(${NRF_COMPONENTS_DIR}/libraries/log/src)
 
 # app
-include_directories(app)
-include_directories(app/blinky_freertos/pca10040/blank/config)
-include_directories(app/blinky_freertos/config/blinky_FreeRTOS_pca10040) # FreeRTOSConfig.h
-include_directories(lib/components/libraries/log)
-include_directories(lib/components/libraries/log/src)
+include_directories(${PROJECT_DIR}/app)
+include_directories(${PROJECT_DIR}/app/blinky_freertos/pca10040/blank/config)
+include_directories(${PROJECT_DIR}/app/blinky_freertos/config/blinky_FreeRTOS_pca10040) # FreeRTOSConfig.h
 
 
 
+# nRF components enabled here
+# Check out the related component folders for options
+
+# set(DRIVERS_NRF hal common delay config gpiote trace pstorage timer ble_flash uart clock)
+# set(LIBRARIES log util trace timer scheduler button uart fifo fstorage experimental_section_vars)
+# set(BLE_MODULES ble_advertising)
+# set(BLE_SERVICES ble_nus)
+
+set(DRIVERS_NRF common timer)
+set(LIBRARIES util)
+set(BLE_MODULES ble_advertising)
+set(BLE_SERVICES ble_nus)
+
+include(cmake/nrf52lib/nrf52lib.cmake)
+
+##### Outputs #####
+
+##### Post build #####
+
+# Add post build commands
+#include(cmake/nrf52lib/post-build.cmake)
+
+# Add JLink commands
+#include(cmake/nrf52lib/jlink.cmake)

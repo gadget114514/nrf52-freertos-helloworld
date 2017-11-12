@@ -1,10 +1,6 @@
-## Copy from nordic sdk to setup
+## Config for your SDK location
 
-```
-cp -rp nRF5_SDK_12.3.0_d7731ad/external/freertos freertos
-mkdir lib
-cp -rp nRF5_SDK_12.3.0_d7731ad/components  lib
-```
+- config SDK_ROOT in CMakeLists.txt
 
 
 ## To build bin
@@ -16,15 +12,45 @@ sh ../cmake.sh
 make
 ```
 
-- config with NRF52832, S132 
-
+- config with CPU NRF52832, SOFTDEVICE S132, NRF_SD_API_VERSION 3
 
 
 ## Status
 
 - App source (empty main function) can be compiled and linked
-- Binary not run yet
+- Binary not run and verified yet
 
 
 ## TODO
 - using UART 
+
+
+# Reference
+
+- https://github.com/ryankurte/nrf52-base.git
+
+```
+The MIT License (MIT)
+
+Copyright (c) 2015 Ryan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+```
+

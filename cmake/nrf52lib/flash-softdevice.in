@@ -1,0 +1,7 @@
+device ${CPU_FAMILY_U}
+h
+loadbin ${SOFTDEVICE_BIN}, 0x0000
+verifybin ${SOFTDEVICE_BIN}, 0x0000
+r
+g
+qc
