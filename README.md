@@ -6,12 +6,13 @@ boilerplate repository for app development with cmake, freertos, gcc on nRF52832
 
 ## Config for your SDK location
 
-- config SDK_ROOT in CMakeLists.txt
-
+- config SDK_ROOT in CMakeLists.txt: the path where ths sdk is located.
+- config REP_ROOT in CMakeLists.txt: the path where the repository is located.
 
 ## To build bin
 
 ```
+cd app/helloworld
 mkdir build
 cd build
 sh ../cmake.sh
