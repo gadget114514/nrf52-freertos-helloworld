@@ -1,3 +1,8 @@
+## nRF52832 app development boilerplate
+
+boilerplate repository for app development with cmake, freertos, gcc on nRF 52832.
+
+
 ## Config for your SDK location
 
 - config SDK_ROOT in CMakeLists.txt
