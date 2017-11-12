@@ -15,3 +15,16 @@ cd build
 sh ../cmake.sh
 make
 ```
+
+- config with NRF52832, S132 
+
+
+
+## Status
+
+- App source (empty main function) can be compiled and linked
+- Binary not run yet
+
+
+## TODO
+- using UART 
