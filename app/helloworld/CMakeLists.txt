@@ -1,20 +1,24 @@
 cmake_minimum_required (VERSION 2.8)
 
+set(REP_ROOT /opt/local/src/nrf52/nrf52-freertos-helloworld) # EDIT
+
 list (APPEND CMAKE_MODULE_PATH
-  "${CMAKE_SOURCE_DIR}/cmake"
-  "${CMAKE_SOURCE_DIR}/cmake/modules"
-  "${CMAKE_SOURCE_DIR}/cmake/platforms")
+  "${REP_ROOT}/cmake"
+  "${REP_ROOT}/cmake/modules"
+  "${REP_ROOT}/cmake/platforms")
 
 
 set(SDK_ROOT /opt/local/src/nrf52/sdk/nRF5_SDK_12.3.0_d7731ad) # EDIT
+
 set(NRF_COMPONENTS_DIR ${SDK_ROOT}/components) # SETUP
 set(FREERTOS_DIR ${SDK_ROOT}/external/freertos) # SETUP
-set(NRF_COMPONENTS_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR}/cmake/nrf52lib/components) # DONT EDIT
+set(NRF_COMPONENTS_CMAKE_DIR ${REP_ROOT}/cmake/nrf52lib/components) # DONT EDIT
 
 set(TARGET freertosnrf52)  # EDIT
 
 set(CMAKE_PROJECT_NAME ${TARGET}) # DONT EDIT
-set(PROJECT_DIR /opt/local/src/nrf52/nrf52-freertos-helloworld) # EDIT
+set(PROJECT_DIR ${REP_ROOT}/app/helloworld) # EDIT
+#set(PROJECT_DIR /opt/local/src/nrf52/nrf52-freertos-helloworld) # EDIT
 
 
 project ($(TARGET) C ASM) # DONT EDIT
@@ -64,8 +68,8 @@ add_executable(nrf52
   ${NRF_COMPONENTS_DIR}/toolchain/system_nrf52.c
   
   # app
-  ${PROJECT_DIR}/app/app.c
-  ${PROJECT_DIR}/app/printf.c
+  ${PROJECT_DIR}/app.c
+  ${PROJECT_DIR}/printf.c
   )
 
 # device selection in nrf52.h
@@ -118,9 +122,9 @@ include_directories(${NRF_COMPONENTS_DIR}/libraries/log)
 include_directories(${NRF_COMPONENTS_DIR}/libraries/log/src)
 
 # app
-include_directories(${PROJECT_DIR}/app)
-include_directories(${PROJECT_DIR}/app/blinky_freertos/pca10040/blank/config)
-include_directories(${PROJECT_DIR}/app/blinky_freertos/config/blinky_FreeRTOS_pca10040) # FreeRTOSConfig.h
+include_directories(${PROJECT_DIR})
+#include_directories(${PROJECT_DIR}/app/blinky_freertos/pca10040/blank/config) # sdk_config.h
+#include_directories(${PROJECT_DIR}/app/blinky_freertos/config/blinky_FreeRTOS_pca10040) # FreeRTOSConfig.h
 
 
 
@@ -137,7 +141,7 @@ set(LIBRARIES util)
 set(BLE_MODULES ble_advertising)
 set(BLE_SERVICES ble_nus)
 
-include(cmake/nrf52lib/nrf52lib.cmake)
+include(${REP_ROOT}/cmake/nrf52lib/nrf52lib.cmake)
 
 ##### Outputs #####
 
