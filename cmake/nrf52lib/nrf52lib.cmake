@@ -25,6 +25,7 @@ include(${NRF_COMPONENTS_CMAKE_DIR}/ble/ble.cmake)
 include(${NRF_COMPONENTS_CMAKE_DIR}/libraries/libraries.cmake)
 include(${NRF_COMPONENTS_CMAKE_DIR}/drivers_nrf/drivers-nrf.cmake)
 include(${NRF_COMPONENTS_CMAKE_DIR}/drivers_ext/drivers-ext.cmake)
+include(${NRF_COMPONENTS_CMAKE_DIR}/components/components.cmake)
 
 # Set compiler flags
 # Common arguments
@@ -52,10 +53,12 @@ endif()
 
 # Select linker script based on soft device selection
 # TODO: this could be put into softdevice/toolchain files
-if(DEFINED SOFTDEVICE)
-set(LINKER_SCRIPT ${SOFTDEVICE_LD})
-else()
-set(LINKER_SCRIPT ${BASE_LD})
+if (NOT DEFINED LINKER_SCRIPT)
+  if(DEFINED SOFTDEVICE)
+    set(LINKER_SCRIPT ${SOFTDEVICE_LD})
+  else()
+    set(LINKER_SCRIPT ${BASE_LD})
+  endif()
 endif()
 
 # Build flags

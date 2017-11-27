@@ -1,0 +1,2 @@
+# Hashes of file build rules.
+c56953ac2e887097e4bd195dea34fdb4 CMakeFiles/softdevice-bin

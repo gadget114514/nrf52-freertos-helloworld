@@ -1,0 +1,1 @@
+arm-none-eabi-ar qc libnrfcomponentslibraries.a  CMakeFiles/nrfcomponentslibraries.dir/opt/local/src/nrf52/sdk/nRF5_SDK_12.3.0_d7731ad/components/boards/boards.c.obj

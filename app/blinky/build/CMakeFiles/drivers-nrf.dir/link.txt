@@ -1,0 +1,1 @@
+arm-none-eabi-ar qc libdrivers-nrf.a  CMakeFiles/drivers-nrf.dir/opt/local/src/nrf52/sdk/nRF5_SDK_12.3.0_d7731ad/components/drivers_nrf/common/nrf_drv_common.c.obj CMakeFiles/drivers-nrf.dir/opt/local/src/nrf52/sdk/nRF5_SDK_12.3.0_d7731ad/components/drivers_nrf/timer/nrf_drv_timer.c.obj

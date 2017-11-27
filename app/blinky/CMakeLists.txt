@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 
 set(REP_ROOT /opt/local/src/nrf52/nrf52-freertos-helloworld) # EDIT
-set(PROJECT_DIR ${REP_ROOT}/app/blinky_freertos) # EDIT
+
 
 list (APPEND CMAKE_MODULE_PATH
   "${REP_ROOT}/cmake"
@@ -18,9 +18,10 @@ set(NRF_COMPONENTS_CMAKE_DIR ${REP_ROOT}/cmake/nrf52lib/components) # DONT EDIT
 set(TARGET freertosnrf52)  # EDIT
 
 set(CMAKE_PROJECT_NAME ${TARGET}) # DONT EDIT
-
+set(PROJECT_DIR ${REP_ROOT}/app/blinky) # EDIT
 #set(PROJECT_DIR /opt/local/src/nrf52/nrf52-freertos-helloworld) # EDIT
 
+set(LINKER_SCRIPT ../pca10040/blank/armgcc/blinky_gcc_nrf52.ld)
 
 project ($(TARGET) C ASM) # DONT EDIT
 
@@ -37,30 +38,18 @@ endforeach()
 enable_testing ()
 
 
+
+
 # source file
 add_executable(nrf52
   # startup
   ${NRF_COMPONENTS_DIR}/toolchain/gcc/gcc_startup_nrf52.S
 
   # nrf52 port
-  ${FREERTOS_DIR}/source/queue.c
-  ${FREERTOS_DIR}/source/tasks.c
-  ${FREERTOS_DIR}/source/croutine.c
-  ${FREERTOS_DIR}/source/timers.c
-  ${FREERTOS_DIR}/source/list.c
-  ${FREERTOS_DIR}/source/portable/MemMang/heap_1.c
-  ${FREERTOS_DIR}/source/event_groups.c
-  ${FREERTOS_DIR}/portable/GCC/nrf52/port.c
-  ${FREERTOS_DIR}/portable/CMSIS/nrf52/port_cmsis.c
-  ${FREERTOS_DIR}/portable/CMSIS/nrf52/port_cmsis_systick.c
 
   # driver
   ${NRF_COMPONENTS_DIR}/drivers_nrf/clock/nrf_drv_clock.c
   ${NRF_COMPONENTS_DIR}/drivers_nrf/common/nrf_drv_common.c
-
-  ${NRF_COMPONENTS_DIR}/softdevice/common/softdevice_handler/softdevice_handler.c
-  ${NRF_COMPONENTS_DIR}/softdevice/common/softdevice_handler/softdevice_handler_appsh.c  
-
   
   # platform
   ${NRF_COMPONENTS_DIR}/libraries/util/app_error.c
@@ -70,15 +59,12 @@ add_executable(nrf52
   ${NRF_COMPONENTS_DIR}/libraries/util/app_util_platform.c
   ${NRF_COMPONENTS_DIR}/libraries/util/sdk_mapped_flags.c
 
-  ${NRF_COMPONENTS_DIR}/toolchain/system_nrf52.c
-
-  ${NRF_COMPONENTS_DIR}/libraries/bsp/bsp_btn_ble.c
-  ${NRF_COMPONENTS_DIR}/libraries/bsp/bsp.c
   ${NRF_COMPONENTS_DIR}/boards/boards.c
+
+  ${NRF_COMPONENTS_DIR}/toolchain/system_nrf52.c
   
   # app
   ${PROJECT_DIR}/main.c
-#  ${PROJECT_DIR}/bspstub.c
   )
 
 # device selection in nrf52.h
@@ -94,43 +80,22 @@ if(NOT DEVICE)
 endif()
 
 
-add_definitions(-D${DEVICEFAMILY})
-add_definitions(-D${DEVICE})
-add_definitions(-D_LITTLE_ENDIAN=1)
-add_definitions(-DNDEBUG)
-add_definitions(-D__HEAP_SIZE=0)
-add_definitions(-DNRF_SD_BLE_API_VERSION=${NRF_SD_BLE_API_VERSION})
-add_definitions(-DNRF52_PAN_12)
-add_definitions(-DNRF52_PAN_15)
-add_definitions(-DNRF52_PAN_58)
-add_definitions(-DFREERTOS)
-add_definitions(-DNRF52_PAN_20)
-add_definitions(-DNRF52_PAN_54)
-add_definitions(-DNRF52)
-add_definitions(-DNRF52_PAN_51)
-add_definitions(-DNRF52_PAN_36)
-add_definitions(-DCONFIG_GPIO_AS_PINRESET)
-add_definitions(-DNRF52_PAN_64)
-add_definitions(-DNRF52_PAN_55)
-add_definitions(-DBOARD_PCA10040)
-add_definitions(-DNRF52_PAN_31)
-add_definitions(-DNRF52832)
+add_definitions(-D${DEVICEFAMILY} -D${DEVICE} -D_LITTLE_ENDIAN=1 -DNDEBUG -D__HEAP_SIZE=0 -DNRF_SD_BLE_API_VERSION=${NRF_SD_BLE_API_VERSION})
 
-set(LDSCRIPT ${PROJECT_ROOT}/pca10040/blank/armgcc/blinky_FreeRTOS_gcc_nrf52.ld) # EDIT
-set(LDSCRIPTDIR ${SDK_ROOT}/components/toolchain/gcc) # EDIT
 
-set(CMAKE_C_FLAGS "-ffreestanding -mcpu=cortex-m4 -mthumb -mfloat-abi=softfp -ffunction-sections -fdata-sections -fno-builtin --short-enums -- -std=c99 -T ${LDSCRIPT} -L ${LDSCRIPTDIR}")
 
+
+#set(CMAKE_C_FLAGS "-mcpu=cortex-m4 -mthumb -mfloat-abi=softfp -ffunction-sections -fdata-sections -fno-builtin -g -std=c99 -T ${LDSCRIPT} -L ${LDSCRIPTDIR}")
 
 # EDIT
 
 # include directories
 # freertos
-include_directories(${FREERTOS_DIR}/source/include)
-#include_directories(${FREERTOS_DIR}/config)
 
 # nrf52
-
+include_directories(${NRF_COMPONENTS_DIR}/libraries/util)
+include_directories(${NRF_COMPONENTS_DIR}/libraries/timer)
+include_directories(${NRF_COMPONENTS_DIR}/libraries/scheduler)
 
 include_directories(${NRF_COMPONENTS_DIR}/device)  # nrf.h
 include_directories(${NRF_COMPONENTS_DIR}/softdevice/s132/headers)  # s132
@@ -139,32 +104,19 @@ include_directories(${FREERTOS_DIR}/portable/CMSIS/nrf52) # nrf52
 include_directories(${NRF_COMPONENTS_DIR}/toolchain/cmsis/include)  # CM4
 include_directories(${NRF_COMPONENTS_DIR}/toolchain) # system nrf52
 
-
 # peripheral
 include_directories(${NRF_COMPONENTS_DIR}/drivers_nrf/hal) # nrf_rtc.h
-include_directories(${NRF_COMPONENTS_DIR}/drivers_nrf/nrf_soc_nosd) # nrf_rtc.h
-include_directories(${NRF_COMPONENTS_DIR}/drivers_nrf/gpiote) # nrf_rtc.h
 include_directories(${NRF_COMPONENTS_DIR}/drivers_nrf/clock) # nrf_drv_clock.h
 include_directories(${NRF_COMPONENTS_DIR}/drivers_nrf/common) # nrf_drv_clock.h
-include_directories(${NRF_COMPONENTS_DIR}/boards) # boards.h
-
-# bsp
-include_directories(${NRF_COMPONENTS_DIR}/libraries/util)
-include_directories(${NRF_COMPONENTS_DIR}/libraries/timer)
-include_directories(${NRF_COMPONENTS_DIR}/libraries/scheduler)
-include_directories(${NRF_COMPONENTS_DIR}/libraries/bsp)
-include_directories(${NRF_COMPONENTS_DIR}/libraries/button)
-include_directories(${NRF_COMPONENTS_DIR}/softdevice/common/softdevice_handler)
 
 # log
 include_directories(${NRF_COMPONENTS_DIR}/libraries/log)
 include_directories(${NRF_COMPONENTS_DIR}/libraries/log/src)
 
-
 # app
 include_directories(${PROJECT_DIR})
-include_directories(${PROJECT_DIR}/pca10040/blank/config) # sdk_config.h
-include_directories(${PROJECT_DIR}/config/blinky_FreeRTOS_pca10040) # FreeRTOSConfig.h
+#include_directories(${PROJECT_DIR}/app/blinky_freertos/pca10040/blank/config) # sdk_config.h
+#include_directories(${PROJECT_DIR}/app/blinky_freertos/config/blinky_FreeRTOS_pca10040) # FreeRTOSConfig.h
 
 
 
@@ -176,12 +128,11 @@ include_directories(${PROJECT_DIR}/config/blinky_FreeRTOS_pca10040) # FreeRTOSCo
 # set(BLE_MODULES ble_advertising)
 # set(BLE_SERVICES ble_nus)
 
-set(DRIVERS_NRF hal common timer delay config nrf_so_nosd gpiote)
-set(LIBRARIES util log timer scheduler uart)
+set(DRIVERS_NRF common timer delay)
+set(LIBRARIES util)
+set(NRFCOMPONENTS boards)
 set(BLE_MODULES ble_advertising)
 set(BLE_SERVICES ble_nus)
-
-target_link_libraries(nrf52 ${PROJECT_DIR}/build/liblibraries.a ${PROJECT_DIR}/build/libble.a  ${PROJECT_DIR}/build/libdrivers-nrf.a    ${PROJECT_DIR}/build/libsoftdevice.a  ${PROJECT_DIR}/build/libtoolchain.a)
 
 include(${REP_ROOT}/cmake/nrf52lib/nrf52lib.cmake)
 

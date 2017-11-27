@@ -1,0 +1,11 @@
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/test.dir
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/nrf52.dir
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/toolchain.dir
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/softdevice-bin.dir
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/softdevice.dir
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/ble.dir
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/edit_cache.dir
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/libraries.dir
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/drivers-nrf.dir
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/nrfcomponentslibraries.dir
+/opt/local/src/nrf52/nrf52-freertos-helloworld/app/blinky/build/CMakeFiles/rebuild_cache.dir

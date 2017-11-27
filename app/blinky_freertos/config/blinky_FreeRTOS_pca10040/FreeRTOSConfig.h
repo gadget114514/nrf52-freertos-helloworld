@@ -200,7 +200,7 @@ standard names - or at least those used in the unmodified vector table. */
     #define xPortSysTickHandler     SysTick_Handler
 #elif (configTICK_SOURCE == FREERTOS_USE_RTC)
     #define configSYSTICK_CLOCK_HZ  ( 32768UL )
-    #define xPortSysTickHandler     RTC1_IRQHandler
+//    #define xPortSysTickHandler     RTC1_IRQHandler
 #else
     #error  Unsupported configTICK_SOURCE value
 #endif
